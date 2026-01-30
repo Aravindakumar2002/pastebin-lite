@@ -236,9 +236,19 @@ class RedisStore implements Persistence {
 
 // Factory
 const isRedisConfigured = !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+const isVercel = process.env.VERCEL === '1';
 const isProduction = process.env.NODE_ENV === 'production';
 const useMemory = process.env.USE_MEMORY_STORE === '1';
 
-export const storage: Persistence = isRedisConfigured
-    ? new RedisStore()
-    : (isProduction || useMemory ? new MemoryStore() : new FileStore());
+// Robust selection logic
+// 1. If Redis is fully configured -> Redis
+// 2. If explicitly asked for Memory -> Memory
+// 3. If running on Vercel (Serverless) -> Memory (File System is Read-Only)
+// 4. If Production build -> Memory (Safer default for deployed non-Vercel too, unless configured otherwise)
+// 5. Fallback -> FileStore (Only for local dev)
+
+export const storage: Persistence = (() => {
+    if (isRedisConfigured) return new RedisStore();
+    if (useMemory || isVercel || isProduction) return new MemoryStore();
+    return new FileStore();
+})();
