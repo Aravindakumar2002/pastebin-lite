@@ -236,11 +236,10 @@ class RedisStore implements Persistence {
 
 // Factory
 const isRedisConfigured = !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
-// Use FileStore in development for persistence, or Redis if configured, fallback to Memory if needed (e.g. test env without fs access?)
-// Note: allowing MemoryStore via env var might be useful for pure unit tests
+const isVercel = process.env.VERCEL === '1';
 const useMemory = process.env.USE_MEMORY_STORE === '1';
 
-export const storage: Persistence = isRedisConfigured 
-    ? new RedisStore() 
-    : (useMemory ? new MemoryStore() : new FileStore());
+export const storage: Persistence = isRedisConfigured
+    ? new RedisStore()
+    : (isVercel || useMemory ? new MemoryStore() : new FileStore());
 
