@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Pastebin Lite
+
+A simple, secure, and robust pastebin application built with Next.js 14.
+
+## Features
+- **Create Pastes**: Share arbitrary text.
+- **Constraints**: Set Time-to-Live (TTL) or Maximum View limits.
+- **Secure**: Robust storage abstraction and safe rendering.
+- **API**: Full REST API for creating and fetching pastes.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+- Node.js 18+
+- NPM
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Installation
+1.  Clone the repository:
+    ```bash
+    git clone <repository_url>
+    cd pastebin-lite
+    ```
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+3.  Start the development server:
+    ```bash
+    npm run dev
+    ```
+    The app will be available at [http://localhost:3000](http://localhost:3000).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment Variables
+For local development, the app uses an **In-Memory Store** by default. Data will be lost on restart.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+To use **Vercel KV (Redis)** for persistence:
+1.  Create a project on [Vercel](https://vercel.com).
+2.  Create a KV Database.
+3.  Copy the environment variables to `.env.local`:
+    ```env
+    KV_REST_API_URL="https://..."
+    KV_REST_API_TOKEN="Ag..."
+    ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Testing Mode
+The application supports deterministic time testing. To use it:
+1.  Set `TEST_MODE=1` in your environment.
+2.  Send requests with the `x-test-now-ms` header (valid unix timestamp in ms).
+    The application will use this timestamp for expiry logic instead of system time.
 
-## Learn More
+## Design Decisions
 
-To learn more about Next.js, take a look at the following resources:
+### Tech Stack
+-   **Next.js 14 (App Router)**: Chosen for its robust routing, server components, and API route capabilities.
+-   **Tailwind CSS**: Used for rapid, modern UI development.
+-   **Zod**: Used for strict input validation on the API layer.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Persistence Layer
+I implemented a **Storage Abstraction Layer** (`lib/storage.ts`) that supports two backends:
+1.  **In-Memory (Map)**: Used for local development to ensure the app works immediately without external dependencies.
+2.  **Vercel KV (Redis)**: Recommended for production/serverless deployment to ensure state persistence across lambdas.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The switch is handled automatically: if `KV_REST_API_URL` is detected, it upgrades to Redis.
 
-## Deploy on Vercel
+### Concurrency & View Counting
+To handle the `max_views` constraint, the application performs an atomic increment (or check-then-increment in memory).
+-   If `max_views` is 1, the first fetch (API or UI) consumes the view. Subsequent fetches return 404.
+-   This ensures expired or exhausted pastes are strictly unavailable.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Security
+-   Content is rendered in a strictly read-only manner using React for HTML escaping.
+-   Inputs are validated using Zod schemas.

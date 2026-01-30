@@ -1,0 +1,30 @@
+# Pastebin-Lite Task List
+
+- [ ] Project Interface
+    - [ ] Initialize Next.js Application <!-- id: 0 -->
+    - [ ] Install dependencies (zod, clsx, tailwind-merge, @vercel/kv) <!-- id: 1 -->
+    - [ ] Configure Environment Variables (`.env.local`) <!-- id: 2 -->
+- [ ] Backend / API Implementation
+    - [ ] Create Storage Abstraction (`lib/storage.ts`) <!-- id: 3 -->
+    - [ ] Implement In-Memory Store (for local dev) <!-- id: 4 -->
+    - [ ] Implement Vercel KV Store (for prod) <!-- id: 5 -->
+    - [ ] Implement Health Check API (`GET /api/healthz`) <!-- id: 6 -->
+    - [ ] Implement Create Paste API (`POST /api/pastes`) <!-- id: 7 -->
+        - [ ] Validation (Zod)
+        - [ ] ID Generation
+        - [ ] Storage
+    - [ ] Implement Get Paste API (`GET /api/pastes/:id`) <!-- id: 8 -->
+        - [ ] Fetch Logic
+        - [ ] Expiry Logic (TTL + `x-test-now-ms`)
+        - [ ] View Count Logic
+- [ ] Frontend Implementation
+    - [ ] Create Paste UI (`/` or `/create`) <!-- id: 9 -->
+        - [ ] Form for content, TTL, Max Views
+        - [ ] Success state with URL
+    - [ ] View Paste UI (`/p/:id`) <!-- id: 10 -->
+        - [ ] Fetch data
+        - [ ] Display content or 404
+        - [ ] Safe rendering
+- [ ] Verification & Documentation
+    - [ ] Verify requirements (Healthz, Paste Creation, Retrieval, Limits, TTL) <!-- id: 11 -->
+    - [ ] Create README.md <!-- id: 12 -->
