@@ -35,8 +35,13 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ id, url }, { status: 201 });
     } catch (error) {
         console.error("Create paste error:", error);
+        console.error("Error stack:", error instanceof Error ? error.stack : 'No stack trace');
+        console.error("Error message:", error instanceof Error ? error.message : String(error));
         return NextResponse.json(
-            { error: "Internal Server Error" },
+            {
+                error: "Internal Server Error",
+                message: error instanceof Error ? error.message : String(error)
+            },
             { status: 500 }
         );
     }
