@@ -67,10 +67,12 @@ body {
   background: rgba(255, 255, 255, 0.1);
 }
 
-.input-pro {
-  @apply w-full bg-gray-50 border-gray-200 text-gray-900 rounded-xl focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm;
-}
+@layer components {
+  .input-pro {
+    @apply w-full bg-gray-50 border-gray-200 text-gray-900 rounded-xl focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm;
+  }
 
-.btn-primary {
-  @apply bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95;
+  .btn-primary {
+    @apply bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-xl transition-all shadow-md hover:shadow-lg active:scale-95;
+  }
 }
