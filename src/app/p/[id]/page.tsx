@@ -26,37 +26,42 @@ export default async function ViewPaste({ params }: Props) {
 
     return (
         <div className="container">
-            <div style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <a href="/" style={{ color: '#0066cc', textDecoration: 'none' }}>← Back</a>
-                <h1 style={{ fontSize: '24px' }}>Paste #{paste.id}</h1>
-            </div>
+            <header style={{ marginBottom: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <a href="/" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>← New Paste</a>
+                <h1 style={{ fontSize: '1.5rem', margin: 0 }}>Paste #{paste.id}</h1>
+            </header>
 
             <div className="card">
-                <div style={{ marginBottom: '15px', fontSize: '13px', color: '#666' }}>
-                    <div>Created: {new Date(paste.created_at).toLocaleString()}</div>
+                <div style={{ marginBottom: '1.5rem', fontSize: '0.85rem', color: 'var(--text-secondary)', display: 'flex', gap: '1.5rem' }}>
+                    <div>
+                        <span style={{ fontWeight: 600, color: 'var(--foreground)' }}>Created:</span> {new Date(paste.created_at).toLocaleString()}
+                    </div>
                     {paste.expires_at && (
-                        <div>Expires: {new Date(paste.expires_at).toLocaleString()}</div>
+                        <div>
+                            <span style={{ fontWeight: 600, color: 'var(--error)' }}>Expires:</span> {new Date(paste.expires_at).toLocaleString()}
+                        </div>
                     )}
                 </div>
 
-                <div style={{ marginBottom: '10px' }}>
+                <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
                     <SimpleCopyButton content={paste.content} />
                 </div>
 
                 <div style={{
-                    background: '#f5f5f5',
-                    border: '1px solid #ddd',
-                    borderRadius: '4px',
-                    padding: '15px',
-                    maxHeight: '500px',
+                    background: 'rgba(0,0,0,0.2)',
+                    border: '1px solid var(--card-border)',
+                    borderRadius: '8px',
+                    padding: '1.25rem',
+                    maxHeight: '600px',
                     overflow: 'auto'
                 }}>
                     <pre style={{
                         margin: 0,
-                        fontFamily: 'monospace',
-                        fontSize: '13px',
+                        fontFamily: '"Geist Mono", monospace',
+                        fontSize: '0.9rem',
                         whiteSpace: 'pre-wrap',
-                        wordWrap: 'break-word'
+                        wordWrap: 'break-word',
+                        color: '#d1d5db'
                     }}>
                         {paste.content}
                     </pre>

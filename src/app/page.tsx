@@ -43,22 +43,22 @@ export default function Home() {
 
   return (
     <div className="container">
-      <h1 style={{ marginBottom: '20px', fontSize: '24px' }}>PasteBin</h1>
+      <h1>PasteBin Lite</h1>
 
       <div className="card">
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '15px' }}>
+          <div style={{ marginBottom: '1.5rem' }}>
             <label>Content</label>
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
               required
               rows={12}
-              placeholder="Paste your text here..."
+              placeholder="Paste your code or text here..."
             />
           </div>
 
-          <div className="grid-2" style={{ marginBottom: '15px' }}>
+          <div className="grid-2" style={{ marginBottom: '1.5rem' }}>
             <div>
               <label>Expire after (seconds)</label>
               <input
@@ -66,7 +66,7 @@ export default function Home() {
                 value={ttl}
                 onChange={(e) => setTtl(e.target.value === '' ? '' : Number(e.target.value))}
                 min="1"
-                placeholder="Optional"
+                placeholder="Never expire"
               />
             </div>
 
@@ -77,19 +77,19 @@ export default function Home() {
                 value={maxViews}
                 onChange={(e) => setMaxViews(e.target.value === '' ? '' : Number(e.target.value))}
                 min="1"
-                placeholder="Optional"
+                placeholder="Unlimited views"
               />
             </div>
           </div>
 
           {error && (
             <div className="error">
-              {error}
+              <span style={{ fontSize: '1.2rem' }}>⚠️</span> {error}
             </div>
           )}
 
           <button type="submit" disabled={loading || !content}>
-            {loading ? 'Creating...' : 'Create Paste'}
+            {loading ? 'Creating...' : 'Create Secure Paste'}
           </button>
         </form>
       </div>

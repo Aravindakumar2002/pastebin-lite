@@ -248,7 +248,14 @@ const useMemory = process.env.USE_MEMORY_STORE === '1';
 // 5. Fallback -> FileStore (Only for local dev)
 
 export const storage: Persistence = (() => {
-    if (isRedisConfigured) return new RedisStore();
-    if (useMemory || isVercel || isProduction) return new MemoryStore();
+    if (isRedisConfigured) {
+        console.log("Using RedisStore for persistence");
+        return new RedisStore();
+    }
+    if (useMemory || isVercel || isProduction) {
+        console.warn("WARNING: Using MemoryStore in a production/serverless environment. Data will be ephemeral and may cause 404 errors.");
+        return new MemoryStore();
+    }
+    console.log("Using FileStore for local persistence");
     return new FileStore();
 })();

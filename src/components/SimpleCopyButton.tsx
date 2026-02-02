@@ -14,9 +14,15 @@ export default function SimpleCopyButton({ content }: { content: string }) {
     return (
         <button
             onClick={handleCopy}
-            style={{ padding: '6px 12px', fontSize: '13px' }}
+            style={{
+                padding: '0.5rem 1rem',
+                fontSize: '0.8rem',
+                width: 'auto',
+                background: copied ? 'var(--accent)' : 'var(--primary)',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+            }}
         >
-            {copied ? 'Copied!' : 'Copy to Clipboard'}
+            {copied ? '✓ Copied!' : '📋 Copy to Clipboard'}
         </button>
     );
 }
