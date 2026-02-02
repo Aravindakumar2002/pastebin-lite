@@ -235,7 +235,7 @@ class RedisStore implements Persistence {
 }
 
 // Factory
-const isRedisConfigured = !!(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+const isRedisConfigured = !!process.env.KV_REST_API_URL;
 const isVercel = process.env.VERCEL === '1';
 const isProduction = process.env.NODE_ENV === 'production';
 const useMemory = process.env.USE_MEMORY_STORE === '1';
@@ -248,6 +248,7 @@ const useMemory = process.env.USE_MEMORY_STORE === '1';
 // 5. Fallback -> FileStore (Only for local dev)
 
 export const storage: Persistence = (() => {
+
     if (isRedisConfigured) {
         console.log("Using RedisStore for persistence");
         return new RedisStore();
